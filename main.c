@@ -510,30 +510,35 @@ void main()
         }
 
         //闹钟检测
-        CheakFlag = Cheak();
-        if(CheakFlag && Alarm && (MODE == 0))
+        //CheakFlag = Cheak();
+        if(Alarm && (MODE == 0))
         {
-            CheakFlag = 0;
-            Alarm = 0;
+            CheakFlag = Cheak();
 
-            LCD_ShowString(1,1,"  -  -   MODE");
-            LCD_ShowString(2,1,"  :  :   BELL ");
+            if(CheakFlag)
+            {
+                CheakFlag = 0;
+                Alarm = 0;
 
-            LCD_ShowNum(1,1,clock[0],2);
-            LCD_ShowNum(1,4,clock[1],2);
-            LCD_ShowNum(1,7,clock[2],2);
-            LCD_ShowNum(2,1,clock[3],2);
-            LCD_ShowNum(2,4,clock[4],2);
-            LCD_ShowNum(2,7,clock[5],2);
+                LCD_ShowString(1,1,"  -  -   MODE");
+                LCD_ShowString(2,1,"  :  :   BELL ");
 
-            FMQBeep(1500);
+                LCD_ShowNum(1,1,clock[0],2);
+                LCD_ShowNum(1,4,clock[1],2);
+                LCD_ShowNum(1,7,clock[2],2);
+                LCD_ShowNum(2,1,clock[3],2);
+                LCD_ShowNum(2,4,clock[4],2);
+                LCD_ShowNum(2,7,clock[5],2);
 
-            MODE = 0;   //进入 TimeShow
-            //初始化模式显示
-            LCD_ShowString(1,1,"  -  -   MODE");
-            LCD_ShowString(2,1,"  :  :   SHOW ");
-            //清零秒表模式
-            StopWatchFlag = 0;
+                FMQBeep(1500);
+
+                MODE = 0;   //进入 TimeShow
+                //初始化模式显示
+                LCD_ShowString(1,1,"  -  -   MODE");
+                LCD_ShowString(2,1,"  :  :   SHOW ");
+                //清零秒表模式
+                StopWatchFlag = 0;
+            }
         }
         
         //MODE 显示
@@ -615,7 +620,7 @@ void FMQBeep(unsigned int time)
 
 int Cheak()
 {
-    DS1302_ReadTime();
+    //DS1302_ReadTime();
     if(DS1302_Time[0] == clock[0] && DS1302_Time[1] == clock[1] &&
        DS1302_Time[2] == clock[2] && DS1302_Time[3] == clock[3] &&
        DS1302_Time[4] == clock[4] && DS1302_Time[5] == clock[5])
