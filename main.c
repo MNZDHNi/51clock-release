@@ -376,32 +376,29 @@ void StopWatch()    //MODE 3 秒表
     //秒表累积
     if(StopWatchAddFlag)
     {
+        EA = 0;
         NowTime.StopSecond_2 += StopCount;
         StopCount = 0;
+        EA = 1;
 
-        if(NowTime.StopSecond_2 > 9)
-        {
-            NowTime.StopSecond_2 = (NowTime.StopSecond_2 - 10);
+        while(NowTime.StopSecond_2 > 9) {
+            NowTime.StopSecond_2 -= 10;
             NowTime.StopSecond_1++;
-
-            if(NowTime.StopSecond_1 == 10)
-            {
+            
+            if(NowTime.StopSecond_1 > 9) {
                 NowTime.StopSecond_1 = 0;
                 NowTime.StopSecond_0++;
-
-                if(NowTime.StopSecond_0 == 60)
-                {
+                
+                if(NowTime.StopSecond_0 > 59) {
                     NowTime.StopSecond_0 = 0;
                     NowTime.StopMinute++;
-
-                    if(NowTime.StopMinute == 60)
-                    {
+                    
+                    if(NowTime.StopMinute > 59) {
                         NowTime.StopMinute = 0;
                         NowTime.StopHour++;
-
-                        if(NowTime.StopHour == 100)
-                        {
-                            //显示超出边界
+                        
+                        if(NowTime.StopHour > 99) {
+                            NowTime.StopHour = 0;
                         }
                     }
                 }
@@ -441,7 +438,7 @@ void StopWatch()    //MODE 3 秒表
 void main()
 {
     //初始化定时器
-    Timer0_Init();
+    //Timer0_Init();
     Timer2_Init();
 
     //初始化时钟模块
@@ -553,21 +550,21 @@ void main()
 }
 
 //中断部分
-void Timer0_ISR(void) interrupt 1 
-{
-    static unsigned int T0Count;
+// void Timer0_ISR(void) interrupt 1 
+// {
+//     static unsigned int T0Count;
 
-    TH0 = 0xFC;        
-    TL0 = 0x67;
+//     TH0 = 0xFC;        
+//     TL0 = 0x67;
     
-    T0Count++;
-    if(T0Count >= 500)
-    {
-        T0Count = 0;
-        //中断内容
-        TimeSetFlashFlag = !TimeSetFlashFlag;   //控制时间闪烁
-    }
-}
+//     T0Count++;
+//     if(T0Count >= 500)
+//     {
+//         T0Count = 0;
+//         //中断内容
+//         TimeSetFlashFlag = !TimeSetFlashFlag;   //控制时间闪烁
+//     }
+// }
 
 void Timer1_ISR(void) interrupt 3 
 {
@@ -579,8 +576,17 @@ void Timer1_ISR(void) interrupt 3
 
 void Timer2_ISR(void) interrupt 5 
 {
+    static unsigned int T0Count;
     static unsigned int T1Count;
-    TF2 = 0;           
+
+    TF2 = 0;    
+    
+    T0Count++;
+    if(T0Count >= 500)
+    {
+        T0Count = 0;
+        TimeSetFlashFlag = !TimeSetFlashFlag;
+    }    
  
     T1Count++;
     if(T1Count >= 10)
