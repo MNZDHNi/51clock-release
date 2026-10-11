@@ -1,0 +1,12 @@
+# 编辑器
+.vscode/
+
+# Keil 构建产物（工程文件 *.uvproj / *.uvprojx 需要提交，这里不忽略）
+Objects/
+Listings/
+*.lst
+*.obj
+*.m51
+*.plg
+*.bak
+*.uvguix.*
